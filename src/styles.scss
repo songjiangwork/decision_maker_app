@@ -1,0 +1,102 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #fafafa;
+  color: #212121;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+app-root > main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: flex-start; /* Align to top, content will push down */
+  padding-top: 20px; /* Add some padding at the top */
+}
+
+.main-content-wrapper {
+  width: 100%;
+  max-width: 1200px; /* Max width for content */
+  padding: 16px; /* Padding around the content area */
+  box-sizing: border-box;
+}
+
+/* General spacing for Material cards if not overridden by component-specific styles */
+mat-card {
+  margin-bottom: 20px !important; /* Add bottom margin to cards */
+}
+
+/* Toolbar adjustments for title visibility */
+mat-toolbar span.app-title {
+  white-space: normal; /* Allow title to wrap if needed */
+  overflow: visible; /* Ensure it's not hidden */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Adjust language select field in toolbar for better alignment and less aggressive spacing */
+.language-select-field .mat-mdc-form-field-subscript-wrapper {
+    display: none; /* Hide the empty subscript wrapper that takes space */
+}
+
+.language-select-field .mat-mdc-text-field-wrapper {
+    height: 48px; /* Adjust height to better fit toolbar */
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.language-select-field .mat-mdc-select-arrow-wrapper {
+    align-self: center;
+}
+
+.language-select-field .mat-mdc-select-value {
+    padding-top: 0;
+    align-self: center;
+}
+
+.language-select-field .mat-mdc-floating-label {
+    top: 14px; /* Adjust label position */
+}
+
+.language-select-field.mat-mdc-form-field-has-icon-prefix .mat-mdc-floating-label,
+.language-select-field.mat-mdc-form-field-has-icon-suffix .mat-mdc-floating-label {
+    top: 14px; /* Adjust label position with icons */
+}
+
+/* Ensure buttons in cards have some margin if they are stacked */
+mat-card-content > button.mat-mdc-raised-button + button.mat-mdc-raised-button,
+mat-card-content > button.mat-mdc-stroked-button + button.mat-mdc-stroked-button,
+mat-card-content > button.mat-mdc-raised-button + button.mat-mdc-stroked-button,
+mat-card-content > button.mat-mdc-stroked-button + button.mat-mdc-raised-button {
+  margin-top: 10px;
+}
+
+/* Table cell padding for better readability */
+table.mat-mdc-table td.mat-mdc-cell,
+table.mat-mdc-table th.mat-mdc-header-cell {
+  padding: 8px 12px !important;
+}
+
+/* Input field in table cell adjustments */
+.score-input-field .mat-mdc-form-field-flex {
+  align-items: center;
+}
+.score-input-field .mat-mdc-text-field-wrapper {
+  height: auto;
+  padding: 4px 0;
+}
+.score-input-field input.mat-mdc-input-element {
+  padding: 4px 0;
+  text-align: center;
+}
+
+

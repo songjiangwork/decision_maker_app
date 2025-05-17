@@ -1,0 +1,85 @@
+/* Increase toolbar height */
+.custom-toolbar-height {
+  padding-top: 0.5rem;
+  min-height: 10rem;
+  height: 10rem;
+}
+
+/* Flex layout for toolbar: nav links left, language select right */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: 100%;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.toolbar-lang-select {
+  margin-right: 0.5rem;
+  min-width: 160px;
+  margin-left: auto;
+}
+
+.active-link {
+  font-weight: bold;
+  border-bottom: 2px solid currentColor;
+}
+.language-select-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+.language-select-field .mat-form-field-infix {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.mat-toolbar span {
+  font-size: 1.25rem;
+}
+.mat-toolbar a.mat-button {
+  min-width: auto;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #fafafa;
+  color: #212121;
+  margin: 0;
+}
+
+.toolbar-flex {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.toolbar-flex.toolbar-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#app-id {
+  width: 100%;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #fff;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  display: block;
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}

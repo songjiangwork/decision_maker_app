@@ -1,0 +1,23 @@
+<mat-toolbar id="app-header" color="primary" class="shadow-lg custom-toolbar-height">
+  <div class="container toolbar-flex toolbar-vertical">
+    <div id="app-id">{{ 'APP_TITLE' | translate }}</div>
+    <div class="flex items-center space-x-2 nav-links">
+      <a mat-button routerLink="/random-decision" routerLinkActive="active-link">{{ 'NAV_RANDOM' | translate }}</a>
+      <a mat-button routerLink="/equal-scoring" routerLinkActive="active-link">{{ 'NAV_EQUAL_SCORING' | translate }}</a>
+      <a mat-button routerLink="/weighted-scoring" routerLinkActive="active-link">{{ 'NAV_WEIGHTED_SCORING' | translate }}</a>
+      <mat-form-field appearance="outline" class="language-select-field toolbar-lang-select">
+        <mat-label>{{ 'SELECT_LANGUAGE' | translate }}</mat-label>
+        <mat-select #langSelect (selectionChange)="switchLang($event.value)" [value]="translate.currentLang">
+          <mat-option *ngFor="let lang of supportedLanguages" [value]="lang.code">
+            {{ lang.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</mat-toolbar>
+
+<main class="p-4">
+  <router-outlet></router-outlet>
+</main>
+

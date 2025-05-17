@@ -1,0 +1,156 @@
+<div class="container mx-auto p-4">
+  <mat-card class="mb-6">
+    <mat-card-header>
+      <mat-card-title>{{ 'WEIGHTED_SCORING_TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- 选项与标准定义区 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="weighted-scoring-input">
+          <mat-form-field appearance="outline" class="flex-grow mr-2">
+            <mat-label>{{ 'OPTION_NAME' | translate }}</mat-label>
+            <input matInput [(ngModel)]="newOptionName" (keyup.enter)="addOption()" [placeholder]="('INPUT_PLACEHOLDER_OPTION_WEIGHTED' | translate)">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addOption()" [disabled]="!newOptionName.trim()">{{ 'ADD_OPTION' | translate }}</button>
+        </div>
+        <div class="weighted-scoring-input">
+          <mat-form-field appearance="outline" class="flex-grow mr-2">
+            <mat-label>{{ 'CRITERIA' | translate }}</mat-label>
+            <input matInput [(ngModel)]="newCriteriaName" (keyup.enter)="addCriteria()" [placeholder]="('INPUT_PLACEHOLDER_CRITERION_WEIGHTED' | translate)">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mr-2" style="width: 120px;">
+            <mat-label>{{ 'WEIGHT' | translate }}</mat-label>
+            <input matInput type="number" [(ngModel)]="newCriteriaWeight" (keyup.enter)="addCriteria()" [placeholder]="('INPUT_PLACEHOLDER_WEIGHT_WEIGHTED' | translate)">
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="addCriteria()" [disabled]="!newCriteriaName.trim() || newCriteriaWeight === null">{{ 'ADD_CRITERION_WEIGHT' | translate }}</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 动态列表区 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADDED_OPTIONS' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list *ngIf="options.length > 0">
+          <mat-list-item *ngFor="let option of options; let i = index">
+            <div class="weighted-scoring-list-row">
+              <span matListItemTitle>{{ i + 1 }}. {{ option.name }}</span>
+              <button mat-icon-button color="warn" (click)="removeOption(i)" [title]="'DELETE' | translate">
+                <mat-icon fontSet="material-icons" fontIcon="delete">delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+        <p *ngIf="options.length === 0" class="text-gray-500 p-4 text-center">{{ 'NO_OPTIONS' | translate }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADDED_CRITERIA_WEIGHTS' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list *ngIf="criteria.length > 0">
+          <mat-list-item *ngFor="let crit of criteria; let j = index">
+            <div class="weighted-scoring-list-row">
+              <span matListItemTitle>{{ j + 1 }}. {{ crit.name }} ({{ 'WEIGHT' | translate }}: {{ crit.weight }})</span>
+              <button mat-icon-button color="warn" (click)="removeCriteria(j)" [title]="'DELETE' | translate">
+                <mat-icon fontSet="material-icons" fontIcon="delete">delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+        <p *ngIf="criteria.length === 0" class="text-gray-500 p-4 text-center">{{ 'NO_CRITERIA' | translate }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- 打分表格区 -->
+  <mat-card class="mb-6" *ngIf="options.length > 0 && criteria.length > 0">
+    <mat-card-header>
+      <mat-card-title>{{ 'SCORING_TABLE_DESC' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="overflow-x-auto">
+      <table mat-table [dataSource]="options" class="w-full">
+        <!-- Option Name Column -->
+        <ng-container matColumnDef="optionName">
+          <th mat-header-cell *matHeaderCellDef>{{ 'OPTION_SLASH_CRITERION' | translate }}</th>
+          <td mat-cell *matCellDef="let option">{{ option.name }}</td>
+        </ng-container>
+
+        <!-- Criteria Score Columns -->
+        <ng-container *ngFor="let crit of criteria; let j = index" [matColumnDef]="'criteria_' + j">
+          <th mat-header-cell *matHeaderCellDef>{{ crit.name }} ({{ 'WEIGHT' | translate }}: {{crit.weight}})</th>
+          <td mat-cell *matCellDef="let option; let i = index">
+            <mat-form-field appearance="outline" class="w-20 score-input-field">
+              <input matInput type="number" [(ngModel)]="scores[i][j]" (ngModelChange)="handleScoreChange()">
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Total Weighted Score Column -->
+        <ng-container matColumnDef="totalWeightedScore">
+          <th mat-header-cell *matHeaderCellDef>{{ 'WEIGHTED_TOTAL_SCORE' | translate }}</th>
+          <td mat-cell *matCellDef="let option">{{ option.totalWeightedScore === undefined ? '-' : option.totalWeightedScore?.toFixed(2) }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="getDisplayedColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getDisplayedColumns();"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 控制与结果区 -->
+  <mat-card class="mb-6">
+    <mat-card-content class="weighted-scoring-actions">
+      <button mat-raised-button color="accent" (click)="calculateAndShowResults()" [disabled]="!canCalculate()" class="w-full">
+        {{ 'CALCULATE_WEIGHTED_TOTAL_SCORE_VIEW_RESULTS' | translate }}
+      </button>
+      <button mat-stroked-button color="warn" (click)="resetAll()" *ngIf="options.length > 0 || criteria.length > 0" class="w-full">
+        {{ 'RESET_ALL' | translate }}
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="bestOption" class="mt-6 bg-green-100">
+    <mat-card-header>
+      <mat-card-title class="text-green-700">{{ 'BEST_OPTION_WEIGHTED' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="text-2xl text-green-700">{{ bestOption.name }} {{ 'BEST_OPTION_WEIGHTED_TOTAL_SCORE' | translate:{totalWeightedScore: bestOption.totalWeightedScore?.toFixed(2)} }}</p>
+      <div *ngIf="options.length > 1">
+        <h4 class="text-lg font-medium mt-2">{{ 'ALL_OPTIONS_WEIGHTED_SCORES' | translate }}</h4>
+        <mat-list>
+          <mat-list-item *ngFor="let option of sortedOptions">
+            {{option.name}}: {{option.totalWeightedScore?.toFixed(2)}}
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<style>
+  .score-input-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  .score-input-field .mat-form-field-infix {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    width: auto; /* Allow input to shrink to content */
+  }
+  .weighted-scoring-input {
+    display: flex;
+    align-items: center;
+  }
+  .weighted-scoring-list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+</style>
+
