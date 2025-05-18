@@ -72,7 +72,8 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/decision-maker/"
             },
             "development": {
               "optimization": false,
